@@ -1,6 +1,7 @@
 package com.aigirlfriend.user.domain.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -18,7 +19,9 @@ public class Users {
     private String phone;
     private String avatar;
     private String status;
+    @TableField("created_at")
     private LocalDateTime createAt;
+    @TableField("updated_at")
     private LocalDateTime updateAt;
     private String nickname;
 }

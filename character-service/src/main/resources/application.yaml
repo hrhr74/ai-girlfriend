@@ -4,7 +4,7 @@ spring:
   application:
     name: character-service
   datasource:
-    url: jdbc:mysql://localhost:3306/ai_girlfriend?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    url: jdbc:mysql://192.168.157.128:3306/ai_character?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
