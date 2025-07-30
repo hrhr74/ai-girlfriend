@@ -1,8 +1,15 @@
 package com.aigirlfriend.service.impl;
 
+import com.aigirlfriend.api.client.CharactersClient;
+import com.aigirlfriend.api.domain.po.Personality;
+import com.aigirlfriend.api.domain.vo.AiCharactersVO;
+import com.aigirlfriend.commen.utils.Result;
 import com.aigirlfriend.domain.vo.DSChatRequest;
 import com.aigirlfriend.domain.vo.DSChatResponse;
 import com.aigirlfriend.service.IDeepSeekService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -16,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DeepSeekServiceImpl implements IDeepSeekService {
 
     @Value("${deepseek.api.key}")
@@ -25,7 +33,20 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    private final CharactersClient charactersClient;
 
+    public String getSystem(){
+        AiCharactersVO aiCharactersVO = charactersClient.getDefault().getData();
+        if(aiCharactersVO == null){
+            throw  new RuntimeException("角色获取错误！");
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(aiCharactersVO);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("角色序列化失败！",e);
+        }
+    }
     @Override
     public String callDS(String userMessage) {
         //设置请求头
@@ -35,7 +56,8 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
 
         List<DSChatRequest.Message> messages = new ArrayList<>();
         //初始化角色风格
-        messages.add(new DSChatRequest.Message("system","你是一只猫娘"));
+            //获取用户的默认性格
+        messages.add(new DSChatRequest.Message("system",getSystem()));
         messages.add(new DSChatRequest.Message("user",userMessage));
         //请求体
         DSChatRequest request = new DSChatRequest();

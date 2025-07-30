@@ -1,5 +1,6 @@
 package com.aigirlfriend.character.domain.po;
 
+import com.aigirlfriend.api.domain.po.Personality;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;

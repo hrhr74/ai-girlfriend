@@ -1,11 +1,12 @@
-package com.aigirlfriend.character.domain.vo;
+package com.aigirlfriend.api.domain.vo;
 
-import com.aigirlfriend.character.domain.po.Personality;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+
+import com.aigirlfriend.api.domain.po.Personality;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AiCharactersVO {
     private Long id;
 

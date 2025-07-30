@@ -1,6 +1,6 @@
 package com.aigirlfriend.character.domain.dto;
 
-import com.aigirlfriend.character.domain.po.Personality;
+import com.aigirlfriend.api.domain.po.Personality;
 import lombok.Data;
 
 @Data

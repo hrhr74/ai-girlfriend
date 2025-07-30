@@ -1,4 +1,4 @@
-package com.aigirlfriend.character.domain.po;
+package com.aigirlfriend.api.domain.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -11,7 +11,36 @@
 
     <groupId>com.aigirlfriend</groupId>
     <artifactId>ai-api</artifactId>
-
+    <dependencies>
+        <!--common-->
+        <dependency>
+            <groupId>com.aigirlfriend</groupId>
+            <artifactId>ai-commen</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!--openFeign-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!--负载均衡器-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.6.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+            <version>3.5.4.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

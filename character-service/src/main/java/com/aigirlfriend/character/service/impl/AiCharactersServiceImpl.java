@@ -1,14 +1,13 @@
 package com.aigirlfriend.character.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.lang.UUID;
+import com.aigirlfriend.api.domain.vo.AiCharactersVO;
 import com.aigirlfriend.character.domain.dto.AiCharactersDTO;
 import com.aigirlfriend.character.domain.po.AiCharacters;
-import com.aigirlfriend.character.domain.vo.AiCharactersVO;
 import com.aigirlfriend.character.mapper.AiCharactersMapper;
 import com.aigirlfriend.character.service.IAiCharactersService;
+import com.aigirlfriend.commen.content.UserConstant;
 import com.aigirlfriend.commen.utils.Result;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -123,5 +122,72 @@ public class AiCharactersServiceImpl extends ServiceImpl<AiCharactersMapper,AiCh
         //修改
         updateById(BeanUtil.copyProperties(aiCharactersDTO, AiCharacters.class));
         return Result.ok("修改成功！");
+    }
+
+    /**
+     * 设置默认角色
+     * @param id
+     * @return
+     */
+    @Override
+    public Result setDeafult(Long id) {
+        Long userId = getUserId();
+        if(userId == null){
+            return Result.error("用户未登录！");
+        }
+
+        //查询当前用户下是否有该id的角色
+        AiCharacters aiCharacters = lambdaQuery().eq(AiCharacters::getUserId, userId)
+                .eq(AiCharacters::getId, id)
+                .one();
+        if(aiCharacters == null){
+            return Result.error("当前用户下不存在该角色！！！");
+        }
+
+        //查询当前是否有默认角色
+        AiCharacters default_character = lambdaQuery().eq(AiCharacters::getUserId, userId)
+                .eq(AiCharacters::getIsDefault, 1)
+                .one();
+        if(default_character != null) {
+            //有默认角色，则将默认角色修改为非默认
+            default_character.setIsDefault(false);
+            updateById(default_character);
+        }
+
+        //设置默认角色
+        aiCharacters.setIsDefault(true);
+        updateById(aiCharacters);
+        return Result.ok();
+    }
+
+    /**
+     * 查询默认角色
+     * @return
+     */
+    @Override
+    public Result<AiCharactersVO> getDefault() {
+        Long userId = getUserId();
+        if(userId == null){
+            return Result.error("用户未登录！");
+        }
+
+        AiCharacters default_character = lambdaQuery().eq(AiCharacters::getUserId, userId)
+                .eq(AiCharacters::getIsDefault, 1)
+                .one();
+
+        if(default_character == null){
+            //随机返回一个角色
+            AiCharacters aiCharacters = lambdaQuery().eq(AiCharacters::getUserId, userId).
+                    last("ORDER BY RAND() LIMIT 1")
+                    .one();
+            if (aiCharacters == null) {
+                //返回系统默认角色
+                aiCharacters = lambdaQuery().eq(AiCharacters::getUserId, UserConstant.Admin_ID)
+                        .one();
+            }
+            AiCharactersVO aiCharactersVO = BeanUtil.copyProperties(aiCharacters, AiCharactersVO.class);
+            return  Result.ok(aiCharactersVO);
+        }
+        return Result.ok(BeanUtil.copyProperties(default_character, AiCharactersVO.class));
     }
 }
