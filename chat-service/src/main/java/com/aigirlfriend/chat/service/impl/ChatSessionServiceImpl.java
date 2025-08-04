@@ -2,7 +2,7 @@ package com.aigirlfriend.chat.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
-import com.aigirlfriend.chat.domain.dto.ChatSessionDTO;
+import com.aigirlfriend.api.domain.dto.ChatSessionDTO;
 import com.aigirlfriend.chat.domain.po.ChatMessages;
 import com.aigirlfriend.chat.domain.po.ChatSession;
 import com.aigirlfriend.chat.domain.vo.ChatSessionVO;
@@ -29,7 +29,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
      * @return
      */
     @Override
-    public Result saveSession(ChatSessionDTO chatSessionDTO) {
+    public Result<Long> saveSession(ChatSessionDTO chatSessionDTO) {
         String sessionId = UUID.randomUUID().toString();
         Long userId = 1L;//TODO Context.getUser();
         if(userId == null){
@@ -39,17 +39,16 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
         if(lambdaQuery().eq(ChatSession::getUserId,userId).eq(ChatSession::getSessionId,sessionId).exists()){
             return Result.error("创建会话失败！请稍后重试！");
         }
-
-        chatSessionDTO.setTitle("新对话...");
-
-
         ChatSession chatSession = BeanUtil.copyProperties(chatSessionDTO, ChatSession.class);
+        chatSession.setUserId(userId);
         chatSession.setSessionId(sessionId);
         chatSession.setCreatedAt(LocalDateTime.now());
         chatSession.setUpdatedAt(LocalDateTime.now());
         chatSession.setStatus(true);
         save(chatSession);
-        return Result.ok(sessionId);
+
+        ChatSession one = lambdaQuery().eq(ChatSession::getUserId, userId).eq(ChatSession::getSessionId, sessionId).one();
+        return Result.ok(one.getId());
     }
 
     /**

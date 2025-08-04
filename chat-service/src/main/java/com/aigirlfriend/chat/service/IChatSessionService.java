@@ -1,6 +1,6 @@
 package com.aigirlfriend.chat.service;
 
-import com.aigirlfriend.chat.domain.dto.ChatSessionDTO;
+import com.aigirlfriend.api.domain.dto.ChatSessionDTO;
 import com.aigirlfriend.chat.domain.po.ChatSession;
 import com.aigirlfriend.chat.domain.vo.ChatSessionVO;
 import com.aigirlfriend.commen.utils.Result;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IChatSessionService extends IService<ChatSession> {
 
-    Result saveSession(ChatSessionDTO chatSessionDTO);
+    Result<Long> saveSession(ChatSessionDTO chatSessionDTO);
 
     Result deleteSession(Long id);
 

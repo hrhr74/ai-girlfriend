@@ -18,8 +18,8 @@ public class DSController {
     private final IDeepSeekService deepSeekService;
 
     @PostMapping("/chat")
-    public String chat(@RequestParam String userMessage){
+    public String chat(@RequestParam String userMessage,@RequestParam(required = false) Long sessionId){
         log.debug("aaa");
-        return deepSeekService.callDS(userMessage);
+        return deepSeekService.sendMsg(userMessage,sessionId);
     }
 }

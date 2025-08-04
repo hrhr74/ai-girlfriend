@@ -1,6 +1,6 @@
 package com.aigirlfriend.chat.controller;
 
-import com.aigirlfriend.chat.domain.dto.ChatSessionDTO;
+import com.aigirlfriend.api.domain.dto.ChatSessionDTO;
 import com.aigirlfriend.chat.domain.vo.ChatSessionVO;
 import com.aigirlfriend.chat.service.IChatSessionService;
 import com.aigirlfriend.commen.utils.Result;
@@ -19,7 +19,7 @@ public class ChatSessionController {
      * 新增会话
      */
     @PostMapping
-    public Result saveSession(@RequestBody() ChatSessionDTO chatSessionDTO){
+    public Result<Long> saveSession(@RequestBody ChatSessionDTO chatSessionDTO){
         return chatSessionService.saveSession(chatSessionDTO);
     }
 

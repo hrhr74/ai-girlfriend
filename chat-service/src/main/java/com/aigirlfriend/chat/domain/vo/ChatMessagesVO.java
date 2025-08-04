@@ -1,7 +1,9 @@
 package com.aigirlfriend.chat.domain.vo;
 
-import java.time.LocalDateTime;
+import lombok.Data;
 
+import java.time.LocalDateTime;
+@Data
 public class ChatMessagesVO {
     private Long id;
     private Long sessionId;

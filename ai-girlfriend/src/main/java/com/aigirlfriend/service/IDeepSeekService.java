@@ -4,6 +4,6 @@ package com.aigirlfriend.service;
 
 
 public interface IDeepSeekService {
-    public String callDS(String userMessage);
 
+    String sendMsg(String userMessage,Long sessionId);
 }

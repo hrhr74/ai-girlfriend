@@ -17,4 +17,5 @@ public class ChatMessages {
     private LocalDateTime sentAt;
     @TableField("is_deleted")
     private Boolean deleted;
+    private LocalDateTime deletedAt;
 }

@@ -1,4 +1,4 @@
-package com.aigirlfriend.chat.domain.dto;
+package com.aigirlfriend.api.domain.dto;
 
 import lombok.Data;
 
