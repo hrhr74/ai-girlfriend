@@ -3,8 +3,10 @@ package com.aigirlfriend.service.impl;
 import cn.hutool.core.thread.ThreadUtil;
 import com.aigirlfriend.api.client.CharactersClient;
 import com.aigirlfriend.api.client.ChatClients;
+import com.aigirlfriend.api.client.MemoryClient;
 import com.aigirlfriend.api.domain.dto.ChatMessagesDTO;
 import com.aigirlfriend.api.domain.dto.ChatSessionDTO;
+import com.aigirlfriend.api.domain.query.MemoryQuery;
 import com.aigirlfriend.api.domain.vo.AiCharactersVO;
 import com.aigirlfriend.commen.utils.Result;
 import com.aigirlfriend.domain.vo.DSChatRequest;
@@ -24,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.aigirlfriend.api.constant.MemoryConstant.*;
 import static com.aigirlfriend.constant.DSConstant.*;
 
 @Service
@@ -39,6 +42,40 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
     private final CharactersClient charactersClient;
 
     private final ChatClients chatClients;
+
+    private final MemoryClient memoryClient;
+    /**
+     * 获取用户记忆
+     */
+    public String getMemory(){
+        String ans = "";
+        Result<List<MemoryQuery>> result = memoryClient.queryMemoryList();
+        if(result== null){
+            return null;
+        }
+        List<MemoryQuery> data = result.getData();
+        if(data == null || data.isEmpty()){
+            return null;
+        }
+        for (MemoryQuery memoryQuery : data) {
+            if(memoryQuery.getMemoryKey().equals(HABIT_KEY)){
+                ans += "用户兴趣" + memoryQuery.getMemoryValue() + "用户认为这个模块的重要程度（最高5）" + memoryQuery.getImportance();
+            }
+            if(memoryQuery.getMemoryKey().equals(USER_INFO_KEY)){
+                ans += "用户信息" + memoryQuery.getMemoryValue() + "用户认为这个模块的重要程度（最高5）" + memoryQuery.getImportance();
+            }
+            if(memoryQuery.getMemoryKey().equals(USER_NICKNAME_KEY)){
+                ans += "用户希望你叫他的昵称" + memoryQuery.getMemoryValue() + "用户认为这个模块的重要程度（最高5）" + memoryQuery.getImportance();
+            }
+        }
+
+        return ans;
+    }
+
+    /**
+     * 获取角色
+     * @return
+     */
     public String getSystem(){
         AiCharactersVO aiCharactersVO = charactersClient.getDefault().getData();
         if(aiCharactersVO == null){
@@ -154,7 +191,12 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
                 curId = longResult.getData();
             }
         }
-        String aiMessage = callDS(getSystem(), userMessage);
+        String system = getSystem();
+        String memory = getMemory();
+        if(memory != null){
+            system += memory;
+        }
+        String aiMessage = callDS(system, userMessage);
         if(!aiMessage.equals(ERROR_RETURN)){
             //发送消息成功，保存用户消息
             ChatMessagesDTO chatMessagesDTO = setChatMessageDTO(userMessage, USER_MSG,curId);
