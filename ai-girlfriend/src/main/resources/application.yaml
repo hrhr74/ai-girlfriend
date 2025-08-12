@@ -2,7 +2,7 @@ server:
   port: 8088
 spring:
   application:
-    name: ai-girlfriend
+    name: girlfriend-service
   datasource:
     url: jdbc:mysql://localhost:3306/hm-item?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,6 +11,12 @@ spring:
   cloud:
     nacos:
       server-addr: 192.168.157.128:8848
+  rabbitmq:
+    host: 192.168.157.128 # 你的虚拟机IP
+    port: 5672 # 端口
+    virtual-host: /aigirlfriend # 虚拟主机
+    username: aigirlfriend # 用户名
+    password: 123 # 密码
 mybatis-plus:
   configuration:
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler

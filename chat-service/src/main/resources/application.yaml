@@ -11,6 +11,12 @@ spring:
   cloud:
     nacos:
       server-addr: 192.168.157.128:8848
+  rabbitmq:
+    host: 192.168.157.128 # 你的虚拟机IP
+    port: 5672 # 端口
+    virtual-host: /aigirlfriend # 虚拟主机
+    username: aigirlfriend # 用户名
+    password: 123 # 密码
 mybatis-plus:
   configuration:
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
@@ -25,3 +31,4 @@ logging:
     dateformat: HH:mm:ss:SSS
   file:
     path: "logs/${spring.application.name}"
+

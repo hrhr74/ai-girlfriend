@@ -8,6 +8,7 @@ import com.aigirlfriend.character.mapper.AiCharactersMapper;
 import com.aigirlfriend.character.service.IAiCharactersService;
 import com.aigirlfriend.commen.content.UserConstant;
 import com.aigirlfriend.commen.utils.Result;
+import com.aigirlfriend.commen.utils.UserContext;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class AiCharactersServiceImpl extends ServiceImpl<AiCharactersMapper,AiCh
      * @return
      */
     private Long getUserId(){
-        return 1L;//TODO 获取用户Id
+        return UserContext.getUser();
     }
 
     /**
@@ -39,7 +40,7 @@ public class AiCharactersServiceImpl extends ServiceImpl<AiCharactersMapper,AiCh
         }
 
         //获取用户id;
-        Long userId = getUserId();//TODO UserContext.getUser();
+        Long userId = getUserId();
 
         if(userId == null){
             return Result.error("用户不存在！");

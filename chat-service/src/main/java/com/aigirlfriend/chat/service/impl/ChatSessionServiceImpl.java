@@ -9,6 +9,7 @@ import com.aigirlfriend.chat.domain.vo.ChatSessionVO;
 import com.aigirlfriend.chat.mapper.ChatSessionMapper;
 import com.aigirlfriend.chat.service.IChatSessionService;
 import com.aigirlfriend.commen.utils.Result;
+import com.aigirlfriend.commen.utils.UserContext;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.baomidou.mybatisplus.extension.toolkit.Db;
@@ -31,7 +32,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
     @Override
     public Result<Long> saveSession(ChatSessionDTO chatSessionDTO) {
         String sessionId = UUID.randomUUID().toString();
-        Long userId = 1L;//TODO Context.getUser();
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
         }
@@ -58,7 +59,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
      */
     @Override
     public Result deleteSession(Long id) {
-        Long userId = 1L;//TODO Context.getUser();
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
         }
@@ -91,7 +92,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
      */
     @Override
     public Result<List<ChatSessionVO>> querySessionList() {
-        Long userId = 1L;//TODO Context.getUser();
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
         }
@@ -113,7 +114,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
      */
     @Override
     public Result<ChatSessionVO> queryById(Long id) {
-        Long userId = 1L;//TODO Context.getUser();
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
         }

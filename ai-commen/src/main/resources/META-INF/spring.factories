@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.aigirlfriend.commen.config.MqConfig,\
+com.aigirlfriend.commen.config.MVCConfig

@@ -1,6 +1,5 @@
 package com.aigirlfriend.service.impl;
 
-import cn.hutool.core.thread.ThreadUtil;
 import com.aigirlfriend.api.client.CharactersClient;
 import com.aigirlfriend.api.client.ChatClients;
 import com.aigirlfriend.api.client.MemoryClient;
@@ -9,12 +8,15 @@ import com.aigirlfriend.api.domain.dto.ChatSessionDTO;
 import com.aigirlfriend.api.domain.query.MemoryQuery;
 import com.aigirlfriend.api.domain.vo.AiCharactersVO;
 import com.aigirlfriend.commen.utils.Result;
+import com.aigirlfriend.commen.utils.UserContext;
 import com.aigirlfriend.domain.vo.DSChatRequest;
 import com.aigirlfriend.domain.vo.DSChatResponse;
 import com.aigirlfriend.service.IDeepSeekService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.aigirlfriend.api.constant.MemoryConstant.*;
+import static com.aigirlfriend.commen.utils.UserContext.getUser;
 import static com.aigirlfriend.constant.DSConstant.*;
 
 @Service
@@ -44,6 +47,8 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
     private final ChatClients chatClients;
 
     private final MemoryClient memoryClient;
+
+    private final RabbitTemplate rabbitTemplate;
     /**
      * 获取用户记忆
      */
@@ -162,8 +167,8 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
 
         String title = callDS(TITLE_PROMPT, prompt);
         title = title.trim();
-        if(title.length() > 20){
-            title = title.substring(0,20);
+        if(title.length() > 15){
+            return title.substring(0,14);
         }
         return title;
     }
@@ -173,7 +178,7 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
      * @return
      */
     public Long getUserId(){
-        return 1L;//TODO Context,getUser();
+        return UserContext.getUser();
     }
     /**
      * 发送消息
@@ -186,9 +191,17 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
         Long curId = sessionId;
         if(sessionId == null){
             ChatSessionDTO chatSessionDTO = setChatSessionDTO(userMessage);
-            Result<Long> longResult = chatClients.saveSession(chatSessionDTO);
-            if(longResult != null){
-                curId = longResult.getData();
+//            Result<Long> longResult = chatClients.saveSession(chatSessionDTO);
+//            if(longResult != null){
+//                curId = longResult.getData();
+//            }
+            try {
+                Object response = rabbitTemplate.convertSendAndReceive("chat.exchange", "session", chatSessionDTO);
+                if(response instanceof Long){
+                    curId = (Long) response;
+                }
+            } catch (AmqpException e) {
+                return "消息发送失败";
             }
         }
         String system = getSystem();
@@ -200,11 +213,13 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
         if(!aiMessage.equals(ERROR_RETURN)){
             //发送消息成功，保存用户消息
             ChatMessagesDTO chatMessagesDTO = setChatMessageDTO(userMessage, USER_MSG,curId);
-            chatClients.saveMessage(chatMessagesDTO);
+            rabbitTemplate.convertAndSend("chat.exchange","message",chatMessagesDTO);
+            //chatClients.saveMessage(chatMessagesDTO);
             //保存ai消息
-            ThreadUtil.sleep(1000);
+//            ThreadUtil.sleep(1000);
             ChatMessagesDTO aiMessageDTO = setChatMessageDTO(aiMessage, AI_MSG,curId);
-            chatClients.saveMessage(aiMessageDTO);
+            rabbitTemplate.convertAndSend("chat.exchange","message",aiMessageDTO);
+//            chatClients.saveMessage(aiMessageDTO);
         }else{
             return "error";
         }

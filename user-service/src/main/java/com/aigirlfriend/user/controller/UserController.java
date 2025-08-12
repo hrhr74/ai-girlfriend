@@ -1,16 +1,15 @@
 package com.aigirlfriend.user.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.aigirlfriend.commen.utils.Result;
 import com.aigirlfriend.user.domain.dto.UserDTO;
 import com.aigirlfriend.user.domain.dto.UserLoginDTO;
+import com.aigirlfriend.user.domain.po.Users;
 import com.aigirlfriend.user.domain.vo.UserLoginVO;
 import com.aigirlfriend.user.service.IUsersService;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -38,8 +37,18 @@ public class UserController {
     /**
      * 修改用户
      */
+    @PutMapping
     public Result update(@RequestBody UserDTO userDTO){
         return usersService.modify(userDTO);
+    }
+    /**
+     * 根据id查询用户
+     */
+    @PostMapping("id")
+    public  Result<UserDTO> getById(){
+        Long userId = 1L;//TODO UserContext.getUser()
+        Users byId = usersService.getById(userId);
+        return Result.ok(BeanUtil.copyProperties(byId, UserDTO.class));
     }
 
 }

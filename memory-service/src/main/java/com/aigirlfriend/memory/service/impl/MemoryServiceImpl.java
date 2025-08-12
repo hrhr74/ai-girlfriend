@@ -3,6 +3,7 @@ package com.aigirlfriend.memory.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.aigirlfriend.api.domain.query.MemoryQuery;
 import com.aigirlfriend.commen.utils.Result;
+import com.aigirlfriend.commen.utils.UserContext;
 import com.aigirlfriend.memory.domain.dto.MemoryDTO;
 import com.aigirlfriend.memory.domain.po.Memory;
 import com.aigirlfriend.memory.mapper.MemoryMapper;
@@ -31,7 +32,7 @@ public class MemoryServiceImpl extends ServiceImpl<MemoryMapper, Memory> impleme
     @Override
     public Result saveMemory(MemoryDTO memoryDTO) {
         //获取当前用户
-        Long userId = 1L;//TODO Context.getUser()
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
         }
@@ -65,7 +66,7 @@ public class MemoryServiceImpl extends ServiceImpl<MemoryMapper, Memory> impleme
      */
     @Override
     public Result<List<MemoryQuery>> queryMemoryList() {
-        Long userId = 1L;//TODO Context.getUser();
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("当前用户未登录！");
         }

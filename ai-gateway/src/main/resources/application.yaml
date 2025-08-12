@@ -1,0 +1,39 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      server-addr: 192.168.157.128:8848
+    gateway:
+      routes:
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=/message/**,/session/**
+
+        - id: character-service
+          uri: lb://character-service
+          predicates:
+            - Path=/character/**
+
+        - id: memory-service
+          uri: lb://memory-service
+          predicates:
+            - Path=/memory/**
+
+        - id: girlfriend-service
+          uri: lb://girlfriend-service
+          predicates:
+            - Path=/chat/**
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+aigirlfriend:
+  auth:
+    excludePaths:
+      - /user/login
+      - /user/register

@@ -8,6 +8,7 @@ import com.aigirlfriend.chat.domain.vo.ChatMessagesVO;
 import com.aigirlfriend.chat.mapper.ChatMessagesMapper;
 import com.aigirlfriend.chat.service.IChatMessagesService;
 import com.aigirlfriend.commen.utils.Result;
+import com.aigirlfriend.commen.utils.UserContext;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class ChatMessagesServiceImpl extends ServiceImpl<ChatMessagesMapper, Cha
      */
     @Override
     public Result saveMessage(ChatMessagesDTO chatMessagesDTO) {
-        Long userId = 1L;//TODO Context.getUser()
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户不存在！");
         }
@@ -54,7 +55,7 @@ public class ChatMessagesServiceImpl extends ServiceImpl<ChatMessagesMapper, Cha
 
     @Override
     public Result<List<ChatMessagesVO>> queryMessages(Long id) {
-        Long userId = 1L;//TODO UserContext.getUser()
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
         }
@@ -87,7 +88,7 @@ public class ChatMessagesServiceImpl extends ServiceImpl<ChatMessagesMapper, Cha
             return Result.error("明日方舟，启动！");
         }
 
-        Long userId = 1L;//TODO Context.getUser();
+        Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
         }
