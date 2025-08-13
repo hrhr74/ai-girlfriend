@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.RequestPath;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AuthGlobalFilter implements GlobalFilter {
+public class AuthGlobalFilter implements GlobalFilter, Ordered {
     private final AuthProperties authProperties;
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
@@ -54,7 +55,7 @@ public class AuthGlobalFilter implements GlobalFilter {
         String userinfo  = userId.toString();
         ServerWebExchange swe = exchange
                 .mutate()
-                .request(builder -> builder.header("userinfo",userinfo))
+                .request(builder -> builder.header("user-info",userinfo))
                 .build();
         System.err.println("userId" + userinfo);
         return chain.filter(swe);
@@ -69,5 +70,10 @@ public class AuthGlobalFilter implements GlobalFilter {
             }
         }
         return false;
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 }

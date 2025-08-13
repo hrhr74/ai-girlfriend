@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.aigirlfriend.api.constant.MemoryConstant.*;
-import static com.aigirlfriend.commen.utils.UserContext.getUser;
 import static com.aigirlfriend.constant.DSConstant.*;
 
 @Service
@@ -54,13 +53,18 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
      */
     public String getMemory(){
         String ans = "";
+        Long userId = getUserId();
+        if(userId == null){
+            return "未登录！";
+        }
+        UserContext.setUser(userId);
         Result<List<MemoryQuery>> result = memoryClient.queryMemoryList();
         if(result== null){
-            return null;
+            return "";
         }
         List<MemoryQuery> data = result.getData();
         if(data == null || data.isEmpty()){
-            return null;
+            return "";
         }
         for (MemoryQuery memoryQuery : data) {
             if(memoryQuery.getMemoryKey().equals(HABIT_KEY)){
@@ -82,6 +86,11 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
      * @return
      */
     public String getSystem(){
+        Long userId = getUserId();
+        if(userId == null){
+            return "获取失败！";
+        }
+        UserContext.setUser(userId);
         AiCharactersVO aiCharactersVO = charactersClient.getDefault().getData();
         if(aiCharactersVO == null){
             throw  new RuntimeException("角色获取错误！");
@@ -182,6 +191,7 @@ public class DeepSeekServiceImpl implements IDeepSeekService {
     }
     /**
      * 发送消息
+     *
      * @param userMessage
      * @param sessionId
      * @return

@@ -191,4 +191,22 @@ public class AiCharactersServiceImpl extends ServiceImpl<AiCharactersMapper,AiCh
         }
         return Result.ok(BeanUtil.copyProperties(default_character, AiCharactersVO.class));
     }
+
+    /**
+     * 删除角色
+     * @param id
+     * @return
+     */
+    @Override
+    public Result removeCharacter(Long id) {
+        if(id == null){
+            return Result.error("传入参数发生未知错误！");
+        }
+        boolean existsed = lambdaQuery().eq(AiCharacters::getId, id).exists();
+        if(!existsed){
+            return Result.error("该角色不存在或已经被删除！");
+        }
+        boolean b = removeById(id);
+        return b ? Result.ok() : Result.error("删除失败，请稍后再试！");
+    }
 }

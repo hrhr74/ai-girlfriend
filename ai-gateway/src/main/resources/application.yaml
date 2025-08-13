@@ -26,12 +26,23 @@ spring:
         - id: girlfriend-service
           uri: lb://girlfriend-service
           predicates:
-            - Path=/chat/**
+            - Path=/ai/**
 
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "Authorization, Content-Type"
+            allowedMethods: # 明确允许的HTTP方法
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS  # 允许预检请求
 aigirlfriend:
   auth:
     excludePaths:

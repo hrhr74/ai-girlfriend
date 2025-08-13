@@ -18,4 +18,6 @@ public interface IAiCharactersService extends IService<AiCharacters> {
     Result setDeafult(Long id);
 
     Result<AiCharactersVO> getDefault();
+
+    Result removeCharacter(Long id);
 }

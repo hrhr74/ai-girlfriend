@@ -64,7 +64,7 @@ public class ChatMessagesServiceImpl extends ServiceImpl<ChatMessagesMapper, Cha
         }
 
         List<ChatMessages> chatMessages = lambdaQuery().eq(ChatMessages::getSessionId, id).
-                eq(ChatMessages::getUserId, id)
+                eq(ChatMessages::getUserId, userId)
                 .eq(ChatMessages::getDeleted,false)
                 .list();
 

@@ -51,7 +51,7 @@ public class MemoryController {
     /**
      * 根据id查询
      */
-    @PostMapping("{id}")
+    @GetMapping("{id}")
     public Result<MemoryQuery> getById(@PathVariable("id") Long id){
         return Result.ok(BeanUtil.copyProperties(memoryService.getById(id),MemoryQuery.class));
     }

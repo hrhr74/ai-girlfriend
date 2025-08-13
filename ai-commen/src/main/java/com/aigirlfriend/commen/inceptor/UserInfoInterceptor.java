@@ -11,9 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 public class UserInfoInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String header = response.getHeader("suerinfo");
+        String header = request.getHeader("user-info");
         if(StrUtil.isNotBlank(header)){
-            UserContext.setUser((Long) handler);
+            UserContext.setUser(Long.valueOf(header));
+            System.out.println("userId: " + Long.valueOf(header));
         }
         return true;
     }

@@ -3,10 +3,7 @@ package com.aigirlfriend.controller;
 import com.aigirlfriend.service.IDeepSeekService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController("DS")
 @RequestMapping("/ai")
@@ -18,7 +15,7 @@ public class DSController {
     private final IDeepSeekService deepSeekService;
 
     @PostMapping("/chat")
-    public String chat(@RequestParam String userMessage,@RequestParam(required = false) Long sessionId){
+    public String chat(@RequestParam String userMessage, @RequestParam(required = false) Long sessionId){
         log.debug("aaa");
         return deepSeekService.sendMsg(userMessage,sessionId);
     }

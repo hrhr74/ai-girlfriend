@@ -5,7 +5,9 @@ import cn.hutool.core.lang.UUID;
 import com.aigirlfriend.api.domain.dto.ChatSessionDTO;
 import com.aigirlfriend.chat.domain.po.ChatMessages;
 import com.aigirlfriend.chat.domain.po.ChatSession;
+import com.aigirlfriend.chat.domain.vo.ChatMessagesVO;
 import com.aigirlfriend.chat.domain.vo.ChatSessionVO;
+import com.aigirlfriend.chat.domain.vo.SessionMessagesVO;
 import com.aigirlfriend.chat.mapper.ChatSessionMapper;
 import com.aigirlfriend.chat.service.IChatSessionService;
 import com.aigirlfriend.commen.utils.Result;
@@ -15,14 +17,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatSession> implements IChatSessionService {
+    private final ChatMessagesServiceImpl chatMessagesService;
 
     /**
      * 新增会话
@@ -113,7 +118,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
      * @return
      */
     @Override
-    public Result<ChatSessionVO> queryById(Long id) {
+    public Result<SessionMessagesVO> queryById(Long id) {
         Long userId = UserContext.getUser();
         if(userId == null){
             return Result.error("用户未登录！");
@@ -123,8 +128,15 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
         if(chatSession == null){
             return Result.error("会话在当前用户下不存在！");
         }
-        ChatSessionVO chatSessionVO = BeanUtil.copyProperties(chatSession, ChatSessionVO.class);
-        return Result.ok(chatSessionVO);
+        //查询下面的消息
+        List<ChatMessagesVO> messagesVOS = new ArrayList<>();
+        Result<List<ChatMessagesVO>> listResult = chatMessagesService.queryMessages(id);
+        if(listResult != null){
+            messagesVOS = listResult.getData();
+        }
+        SessionMessagesVO sessionMessagesVO = BeanUtil.copyProperties(chatSession, SessionMessagesVO.class);
+        sessionMessagesVO.setMessages(messagesVOS);
+        return Result.ok(sessionMessagesVO);
     }
 
 

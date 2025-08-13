@@ -91,7 +91,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         }
         password = DigestUtil.md5Hex(password);
         //查询数据库
-        Users user = lambdaQuery().eq(Users::getUsername, username).one();
+        Users user = lambdaQuery().eq(Users::getUsername, "@"+username).one();
         if(user == null){
             return Result.error("用户不存在！");
         }

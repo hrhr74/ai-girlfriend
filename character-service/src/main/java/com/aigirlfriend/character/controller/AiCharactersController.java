@@ -39,7 +39,7 @@ public class AiCharactersController {
     /**
      * 根据id查询角色
      */
-    @GetMapping("{id}")
+    @PostMapping("{id}")
     public Result<AiCharactersVO> getCharacterById(@PathVariable("id") Long id){
         return Result.ok(BeanUtil.copyProperties(aiCharactersService.getById(id), AiCharactersVO.class));
     }
@@ -53,4 +53,12 @@ public class AiCharactersController {
     public Result<AiCharactersVO> getDefault(){
         return aiCharactersService.getDefault();
     }
+    /**
+     * 删除角色
+     */
+    @DeleteMapping("{id}")
+    public Result removeCharacter(@PathVariable("id") Long id){
+        return aiCharactersService.removeCharacter(id);
+    }
+
 }

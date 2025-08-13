@@ -2,6 +2,7 @@ package com.aigirlfriend.user.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.aigirlfriend.commen.utils.Result;
+import com.aigirlfriend.commen.utils.UserContext;
 import com.aigirlfriend.user.domain.dto.UserDTO;
 import com.aigirlfriend.user.domain.dto.UserLoginDTO;
 import com.aigirlfriend.user.domain.po.Users;
@@ -46,7 +47,7 @@ public class UserController {
      */
     @PostMapping("id")
     public  Result<UserDTO> getById(){
-        Long userId = 1L;//TODO UserContext.getUser()
+        Long userId = UserContext.getUser();
         Users byId = usersService.getById(userId);
         return Result.ok(BeanUtil.copyProperties(byId, UserDTO.class));
     }

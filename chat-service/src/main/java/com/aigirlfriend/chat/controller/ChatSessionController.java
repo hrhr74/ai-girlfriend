@@ -2,6 +2,7 @@ package com.aigirlfriend.chat.controller;
 
 import com.aigirlfriend.api.domain.dto.ChatSessionDTO;
 import com.aigirlfriend.chat.domain.vo.ChatSessionVO;
+import com.aigirlfriend.chat.domain.vo.SessionMessagesVO;
 import com.aigirlfriend.chat.service.IChatSessionService;
 import com.aigirlfriend.commen.utils.Result;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +39,10 @@ public class ChatSessionController {
         return chatSessionService.querySessionList();
     }
     /**
-     * 查询单个会话
+     * 查询单个会话及其下面的消息
      */
     @PostMapping("{id}")
-    public Result<ChatSessionVO> queryById(@PathVariable("id") Long id){
+    public Result<SessionMessagesVO> queryById(@PathVariable("id") Long id){
         return chatSessionService.queryById(id);
     }
 
