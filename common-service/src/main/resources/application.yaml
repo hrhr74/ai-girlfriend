@@ -1,0 +1,10 @@
+server:
+  port: 8089
+aigirlfriend:
+  alioss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    access-key-id: ${ACCESS_KEY_ID} #id
+    access-key-secret: ${ACCESS_KEY_SECRET} #密钥
+    bucket-name: web-tilas-hrhr74
+
+
