@@ -44,6 +44,8 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-rsa</artifactId>
         </dependency>
+        <!--阿里巴巴oss-->
+
     </dependencies>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

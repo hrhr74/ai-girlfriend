@@ -39,6 +39,7 @@
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <hutool.version>5.8.11</hutool.version>
         <mysql.version>8.0.23</mysql.version>
+        <aliyun.sdk.oss>3.10.2</aliyun.sdk.oss>
     </properties>
     <!-- 对依赖包进行管理 -->
     <dependencyManagement>
@@ -76,6 +77,12 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <!--阿里巴巴oss-->
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun.sdk.oss}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
